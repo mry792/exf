@@ -22,7 +22,8 @@ class ExfRecipe (ConanFile):
 
     def source (self):
         git = Git(self)
-        git.clone(self.url)
+        git.clone(self.url, target = '.')
+        git.checkout('v' + {self.version})
 
     def layout (self):
         cmake_layout(self)
