@@ -3,11 +3,12 @@
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 from conan.tools.scm import Git
+from conans.tools import Git as LegacyGit
 
 
 class ExfRecipe (ConanFile):
     name = 'extended-freestanding'
-    version = '0.0.1'
+    # version = (computed from local repo)
 
     license = 'GNU GENERAL PUBLIC LICENSE'
     author = 'M. Emery Goss <m.goss792@gmail.com>'
@@ -19,6 +20,11 @@ class ExfRecipe (ConanFile):
 
     settings = 'compiler', 'build_type'
     generators = 'CMakeToolchain'
+
+    def set_version (self):
+        git = LegacyGit(self.recipe_folder)
+        tag = git.run('describe --tags')
+        self.version = tag[1:]
 
     def source (self):
         git = Git(self)
