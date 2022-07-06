@@ -2,6 +2,7 @@
 
 from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
+from conan.tools.files import update_conandata
 from conan.tools.scm import Git
 from conans.tools import Git as LegacyGit
 
@@ -26,10 +27,21 @@ class ExfRecipe (ConanFile):
         tag = git.run('describe --tags')
         self.version = tag[1:]
 
+    def export (self):
+        git = Git(self, self.recipe_folder)
+        scm_url, scm_commit = git.get_url_and_commit()
+        update_conandata(self, {
+            'source': {
+                'commit': scm_commit,
+                'url': scm_url
+            }
+        })
+
     def source (self):
         git = Git(self)
-        git.clone(self.url, target = '.')
-        git.checkout('v' + {self.version})
+        source = self.conan_data['source']
+        git.clone(source['url'], target = '.')
+        git.checkout(source['commit'])
 
     def layout (self):
         cmake_layout(self)
