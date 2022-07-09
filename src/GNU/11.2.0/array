@@ -26,6 +26,10 @@
  *  This is a Standard C++ Library header.
  */
 
+#if __STDC_HOSTED__
+    #include_next <array>
+#endif
+
 #ifndef _GLIBCXX_ARRAY
 #define _GLIBCXX_ARRAY 1
 
