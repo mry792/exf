@@ -30,7 +30,9 @@
 
 // Written by Johannes Singler.
 
-#include <cstdio>
+#if __STDC_HOSTED__
+#include_next <parallel/compiletime_settings.h>
+#else
 
 /** @brief Determine verbosity level of the parallel mode.
  *  Level 1 prints a message each time a parallel-mode function is entered. */
@@ -44,9 +46,7 @@
 #define _GLIBCXX_CALL(__n)
 #endif
 #if (_GLIBCXX_VERBOSE_LEVEL == 1)
-#define _GLIBCXX_CALL(__n) \
-  printf("   %__s:\niam = %d, __n = %ld, __num_threads = %d\n", \
-  __PRETTY_FUNCTION__, omp_get_thread_num(), (__n), __get_max_threads());
+#error "`_GLIBCXX_VERBOSE_LEVEL == 1` is not supported"
 #endif
 
 #ifndef _GLIBCXX_SCALE_DOWN_FPU
@@ -72,4 +72,6 @@
  *  Consider the size of the TLB for
 *  gnu_parallel::__parallel_random_shuffle(). */
 #define _GLIBCXX_RANDOM_SHUFFLE_CONSIDER_TLB 0
+#endif
+
 #endif
