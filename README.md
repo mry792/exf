@@ -9,8 +9,9 @@ For embedded environments and others without an OS, a subset of the C++ standard
 | header | What is supported? |
 | --- | --- |
 | [\<array\>](https://en.cppreference.com/w/cpp/header/array) | Everything except `array::at` functions. |
+| [\<iterator\>](https://en.cppreference.com/w/cpp/header/iterator) | Everything except stream and streambuf iterators. |
 | [\<utility\>](https://en.cppreference.com/w/cpp/header/utility) | Fully supported. |
 
 ## Supported Compilers
 
-Right now the only supported compmiler is GNU and only version `11.2.0`. I have plans to support more versions of GNU in the future but my focus right now is on including more parts of the standard library. 
+Right now the only supported compmiler is GNU and only version `11.2.0`. I have plans to support more versions of GNU in the future but my focus right now is on including more parts of the standard library.
