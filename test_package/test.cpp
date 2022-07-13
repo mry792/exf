@@ -14,7 +14,7 @@ void iterator_test () {
     static_assert(std::is_same_v<typename std::iterator_traits<int*>::value_type, int>);
 
     #if __STDC_HOSTED__
-        std::istream_iterator<int> int_istream_iter{std::cin};
+        std::ostream_iterator<int> int_ostream_iter{std::cout};
     #endif
 }
 
