@@ -18,6 +18,12 @@ void iterator_test () {
     #endif
 }
 
+#include <optional>
+constexpr void optional_test () {
+    static_assert(std::optional<int>{}.value_or(7) == 7);
+    static_assert(std::optional<int>{4}.value_or(7) == 4);
+}
+
 #include <tuple>
 void tuple_test () {
     std::tuple<int, double> tup{7, 3.2};
@@ -35,6 +41,7 @@ void utility_test () {
 
 int main () {
     iterator_test();
+    optional_test();
     tuple_test();
     utility_test();
     return 0;

@@ -10,6 +10,8 @@ For embedded environments and others without an OS, a subset of the C++ standard
 | --- | --- |
 | [\<array\>](https://en.cppreference.com/w/cpp/header/array) | Everything except `array::at` functions. |
 | [\<iterator\>](https://en.cppreference.com/w/cpp/header/iterator) | Everything except stream and streambuf iterators. |
+| [\<optional\>](https://en.cppreference.com/w/cpp/header/optional) | Everything except `optional::value` functions. |
+| [\<tuple\>](https://en.cppreference.com/w/cpp/header/tuple) | Fully supported. (Though allocators have not been tested with tuples.) |
 | [\<utility\>](https://en.cppreference.com/w/cpp/header/utility) | Fully supported. |
 
 ## Supported Compilers
