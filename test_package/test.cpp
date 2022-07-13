@@ -18,6 +18,12 @@ void iterator_test () {
     #endif
 }
 
+#include <tuple>
+void tuple_test () {
+    std::tuple<int, double> tup{7, 3.2};
+    (void)tup;
+}
+
 #include <utility>
 void utility_test () {
     int i = 7;
@@ -29,6 +35,7 @@ void utility_test () {
 
 int main () {
     iterator_test();
+    tuple_test();
     utility_test();
     return 0;
 }
