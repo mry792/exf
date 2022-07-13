@@ -1,5 +1,4 @@
 #include <type_traits>
-#include <utility>
 
 #include <array>
 static_assert(std::is_same_v<typename std::array<double, 7>::iterator, double*>);
@@ -8,14 +7,19 @@ static_assert(std::is_same_v<typename std::array<double, 7>::iterator, double*>)
 #endif
 
 #include <iterator>
-static_assert(std::is_same_v<typename std::iterator_traits<int*>::value_type, int>);
-
 #if __STDC_HOSTED__
     #include <iostream>
-    std::istream_iterator<int> int_istream_iter{std::cin};
 #endif
+void iterator_test () {
+    static_assert(std::is_same_v<typename std::iterator_traits<int*>::value_type, int>);
 
-void foo () {
+    #if __STDC_HOSTED__
+        std::ostream_iterator<int> int_ostream_iter{std::cout};
+    #endif
+}
+
+#include <utility>
+void utility_test () {
     int i = 7;
     (void)std::move(i);
     (void)std::forward<int&>(i);
@@ -24,6 +28,7 @@ void foo () {
 }
 
 int main () {
-    foo();
+    iterator_test();
+    utility_test();
     return 0;
 }
