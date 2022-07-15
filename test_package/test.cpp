@@ -39,10 +39,31 @@ void utility_test () {
     (void)seq;
 }
 
+#include <variant>
+void variant_test () {
+    struct Non_Trivial {
+        Non_Trivial () {}
+        Non_Trivial (double) {}
+        Non_Trivial (Non_Trivial const&) {}
+        Non_Trivial (Non_Trivial&&) {}
+    };
+
+    std::variant<Non_Trivial, int, double> var;
+
+    struct Visitor {
+        void operator () (Non_Trivial) {}
+        void operator () (double) {}
+        void operator () (int) {}
+    };
+
+    std::visit(Visitor{}, var);
+}
+
 int main () {
     iterator_test();
     optional_test();
     tuple_test();
     utility_test();
+    variant_test();
     return 0;
 }
