@@ -13,6 +13,12 @@ For embedded environments and others without an OS, a subset of the C++ standard
 | [\<optional\>](https://en.cppreference.com/w/cpp/header/optional) | Everything except `optional::value` functions. |
 | [\<tuple\>](https://en.cppreference.com/w/cpp/header/tuple) | Fully supported. (Though allocators have not been tested with tuples.) |
 | [\<utility\>](https://en.cppreference.com/w/cpp/header/utility) | Fully supported. |
+| [\<variant\>](https://en.cppreference.com/w/cpp/header/variant) | Fully supported. |
+
+### Important Notes
+
+#### GNU 11.2.0
+_When using types with `std::variant`, make sure that their constructors and assignment operators are either trivial or that they are properly annotated with `noexcept` when they can guarantee that they won't throw exceptions._ `std::variant` still includes code to throw exceptions if they are enabled but it only throws exceptions if it is in a state where it couldn't recover from one of the wrapped alternatives throwing an exception. If exceptions are disabled, this falls back to calling the built-in abort operation. All of this code is removed by optimization when the compiler can verify that constructors and assigment operators won't throw.
 
 ## Supported Compilers
 
