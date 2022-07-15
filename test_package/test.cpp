@@ -18,6 +18,11 @@ void iterator_test () {
     #endif
 }
 
+#include <numbers>
+constexpr void numbers_test () {
+    static_assert(std::numbers::pi - 3.14159 < 0.00001);
+}
+
 #include <optional>
 constexpr void optional_test () {
     static_assert(std::optional<int>{}.value_or(7) == 7);
