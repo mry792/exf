@@ -12,6 +12,7 @@ For embedded environments and others without an OS, a subset of the C++ standard
 | [\<iterator\>](https://en.cppreference.com/w/cpp/header/iterator) | Everything except stream and streambuf iterators. |
 | [\<numbers\>](https://en.cppreference.com/w/cpp/header/numbers) | Fully supported. |
 | [\<optional\>](https://en.cppreference.com/w/cpp/header/optional) | Everything except `optional::value` functions. |
+| [\<ranges\>](https://en.cppreference.com/w/cpp/header/ranges) | Everything except `ranges::basic_istream_view` and `views::istream`. |
 | [\<tuple\>](https://en.cppreference.com/w/cpp/header/tuple) | Fully supported. (Though allocators have not been tested with tuples.) |
 | [\<utility\>](https://en.cppreference.com/w/cpp/header/utility) | Fully supported. |
 | [\<variant\>](https://en.cppreference.com/w/cpp/header/variant) | Fully supported. |
