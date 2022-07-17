@@ -41,6 +41,17 @@ void ranges_test () {
     static_assert(ar_plus_1[2] == 5.5);
 }
 
+#include <ratio>
+constexpr void ratio_test () {
+    static_assert(std::is_same_v<
+        std::ratio_multiply<
+            std::ratio<2, 9>,
+            std::ratio<3, 2>
+        >,
+        std::ratio<1, 3>
+    >);
+}
+
 #include <tuple>
 void tuple_test () {
     std::tuple<int, double> tup{7, 3.2};
@@ -80,6 +91,7 @@ int main () {
     iterator_test();
     optional_test();
     ranges_test();
+    ratio_test();
     tuple_test();
     utility_test();
     variant_test();
