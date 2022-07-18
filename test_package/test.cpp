@@ -6,6 +6,12 @@ static_assert(std::is_same_v<typename std::array<double, 7>::iterator, double*>)
     static_assert(std::is_same_v<decltype(std::declval<std::array<int, 4>>().at(2)), int&>);
 #endif
 
+#include <chrono>
+void chrono_test () {
+    using namespace std::chrono_literals;
+    static_assert(2s == 2000ms);
+}
+
 #include <iterator>
 #if __STDC_HOSTED__
     #include <iostream>
@@ -88,6 +94,7 @@ void variant_test () {
 }
 
 int main () {
+    chrono_test();
     iterator_test();
     optional_test();
     ranges_test();
