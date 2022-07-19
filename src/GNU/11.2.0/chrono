@@ -27,6 +27,10 @@
  *  @ingroup chrono
  */
 
+#if __STDC_HOSTED__
+# include_next <chrono>
+#endif
+
 #ifndef _GLIBCXX_CHRONO
 #define _GLIBCXX_CHRONO 1
 
@@ -41,6 +45,7 @@
 #include <limits>
 #include <ctime>
 #include <bits/parse_numbers.h> // for literals support.
+#include <bits/std_abs.h>
 #if __cplusplus > 201703L
 # include <concepts>
 # include <compare>
