@@ -53,13 +53,16 @@
  *  Do not attempt to use it directly. @headername{algorithm}
  */
 
+#if __STDC_HOSTED__
+# include_next <bits/stl_algo.h>
+#endif
+
 #ifndef _STL_ALGO_H
 #define _STL_ALGO_H 1
 
 #include <cstdlib>	     // for rand
 #include <bits/algorithmfwd.h>
 #include <bits/stl_heap.h>
-#include <bits/stl_tempbuf.h>  // for _Temporary_buffer
 #include <bits/predefined_ops.h>
 
 #if __cplusplus >= 201103L
@@ -1511,129 +1514,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
   // partition
 
-  /// This is a helper function...
-  /// Requires __first != __last and !__pred(__first)
-  /// and __len == distance(__first, __last).
-  ///
-  /// !__pred(__first) allows us to guarantee that we don't
-  /// move-assign an element onto itself.
-  template<typename _ForwardIterator, typename _Pointer, typename _Predicate,
-	   typename _Distance>
-    _ForwardIterator
-    __stable_partition_adaptive(_ForwardIterator __first,
-				_ForwardIterator __last,
-				_Predicate __pred, _Distance __len,
-				_Pointer __buffer,
-				_Distance __buffer_size)
-    {
-      if (__len == 1)
-	return __first;
-
-      if (__len <= __buffer_size)
-	{
-	  _ForwardIterator __result1 = __first;
-	  _Pointer __result2 = __buffer;
-
-	  // The precondition guarantees that !__pred(__first), so
-	  // move that element to the buffer before starting the loop.
-	  // This ensures that we only call __pred once per element.
-	  *__result2 = _GLIBCXX_MOVE(*__first);
-	  ++__result2;
-	  ++__first;
-	  for (; __first != __last; ++__first)
-	    if (__pred(__first))
-	      {
-		*__result1 = _GLIBCXX_MOVE(*__first);
-		++__result1;
-	      }
-	    else
-	      {
-		*__result2 = _GLIBCXX_MOVE(*__first);
-		++__result2;
-	      }
-
-	  _GLIBCXX_MOVE3(__buffer, __result2, __result1);
-	  return __result1;
-	}
-
-      _ForwardIterator __middle = __first;
-      std::advance(__middle, __len / 2);
-      _ForwardIterator __left_split =
-	std::__stable_partition_adaptive(__first, __middle, __pred,
-					 __len / 2, __buffer,
-					 __buffer_size);
-
-      // Advance past true-predicate values to satisfy this
-      // function's preconditions.
-      _Distance __right_len = __len - __len / 2;
-      _ForwardIterator __right_split =
-	std::__find_if_not_n(__middle, __right_len, __pred);
-
-      if (__right_len)
-	__right_split =
-	  std::__stable_partition_adaptive(__right_split, __last, __pred,
-					   __right_len,
-					   __buffer, __buffer_size);
-
-      return std::rotate(__left_split, __middle, __right_split);
-    }
-
-  template<typename _ForwardIterator, typename _Predicate>
-    _ForwardIterator
-    __stable_partition(_ForwardIterator __first, _ForwardIterator __last,
-		       _Predicate __pred)
-    {
-      __first = std::__find_if_not(__first, __last, __pred);
-
-      if (__first == __last)
-	return __first;
-
-      typedef typename iterator_traits<_ForwardIterator>::value_type
-	_ValueType;
-      typedef typename iterator_traits<_ForwardIterator>::difference_type
-	_DistanceType;
-
-      _Temporary_buffer<_ForwardIterator, _ValueType>
-	__buf(__first, std::distance(__first, __last));
-      return
-	std::__stable_partition_adaptive(__first, __last, __pred,
-					 _DistanceType(__buf.requested_size()),
-					 __buf.begin(),
-					 _DistanceType(__buf.size()));
-    }
-
   /**
-   *  @brief Move elements for which a predicate is true to the beginning
-   *         of a sequence, preserving relative ordering.
-   *  @ingroup mutating_algorithms
-   *  @param  __first   A forward iterator.
-   *  @param  __last    A forward iterator.
-   *  @param  __pred    A predicate functor.
-   *  @return  An iterator @p middle such that @p __pred(i) is true for each
-   *  iterator @p i in the range @p [first,middle) and false for each @p i
-   *  in the range @p [middle,last).
-   *
-   *  Performs the same function as @p partition() with the additional
-   *  guarantee that the relative ordering of elements in each group is
-   *  preserved, so any two elements @p x and @p y in the range
-   *  @p [__first,__last) such that @p __pred(x)==__pred(y) will have the same
-   *  relative ordering after calling @p stable_partition().
-  */
+   * Removed as it relies on dynamic memory allocation.
+   */
   template<typename _ForwardIterator, typename _Predicate>
     inline _ForwardIterator
     stable_partition(_ForwardIterator __first, _ForwardIterator __last,
-		     _Predicate __pred)
-    {
-      // concept requirements
-      __glibcxx_function_requires(_Mutable_ForwardIteratorConcept<
-				  _ForwardIterator>)
-      __glibcxx_function_requires(_UnaryPredicateConcept<_Predicate,
-	    typename iterator_traits<_ForwardIterator>::value_type>)
-      __glibcxx_requires_valid_range(__first, __last);
-
-      return std::__stable_partition(__first, __last,
-				     __gnu_cxx::__ops::__pred_iter(__pred));
-    }
+		     _Predicate __pred) = delete;
 
   /// This is a helper function for the sort routines.
   template<typename _RandomAccessIterator, typename _Compare>
@@ -2512,117 +2399,24 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 				  __len1 - __len11, __len2 - __len22, __comp);
     }
 
-  template<typename _BidirectionalIterator, typename _Compare>
-    void
-    __inplace_merge(_BidirectionalIterator __first,
-		    _BidirectionalIterator __middle,
-		    _BidirectionalIterator __last,
-		    _Compare __comp)
-    {
-      typedef typename iterator_traits<_BidirectionalIterator>::value_type
-	  _ValueType;
-      typedef typename iterator_traits<_BidirectionalIterator>::difference_type
-	  _DistanceType;
-      typedef _Temporary_buffer<_BidirectionalIterator, _ValueType> _TmpBuf;
-
-      if (__first == __middle || __middle == __last)
-	return;
-
-      const _DistanceType __len1 = std::distance(__first, __middle);
-      const _DistanceType __len2 = std::distance(__middle, __last);
-
-      // __merge_adaptive will use a buffer for the smaller of
-      // [first,middle) and [middle,last).
-      _TmpBuf __buf(__first, std::min(__len1, __len2));
-
-      if (__buf.begin() == 0)
-	std::__merge_without_buffer
-	  (__first, __middle, __last, __len1, __len2, __comp);
-      else
-	std::__merge_adaptive
-	  (__first, __middle, __last, __len1, __len2, __buf.begin(),
-	   _DistanceType(__buf.size()), __comp);
-    }
-
   /**
-   *  @brief Merges two sorted ranges in place.
-   *  @ingroup sorting_algorithms
-   *  @param  __first   An iterator.
-   *  @param  __middle  Another iterator.
-   *  @param  __last    Another iterator.
-   *  @return  Nothing.
-   *
-   *  Merges two sorted and consecutive ranges, [__first,__middle) and
-   *  [__middle,__last), and puts the result in [__first,__last).  The
-   *  output will be sorted.  The sort is @e stable, that is, for
-   *  equivalent elements in the two ranges, elements from the first
-   *  range will always come before elements from the second.
-   *
-   *  If enough additional memory is available, this takes (__last-__first)-1
-   *  comparisons.  Otherwise an NlogN algorithm is used, where N is
-   *  distance(__first,__last).
-  */
+   *  Removed as it relies on dynamic memory allocation.
+   */
   template<typename _BidirectionalIterator>
     inline void
     inplace_merge(_BidirectionalIterator __first,
 		  _BidirectionalIterator __middle,
-		  _BidirectionalIterator __last)
-    {
-      // concept requirements
-      __glibcxx_function_requires(_Mutable_BidirectionalIteratorConcept<
-	    _BidirectionalIterator>)
-      __glibcxx_function_requires(_LessThanComparableConcept<
-	    typename iterator_traits<_BidirectionalIterator>::value_type>)
-      __glibcxx_requires_sorted(__first, __middle);
-      __glibcxx_requires_sorted(__middle, __last);
-      __glibcxx_requires_irreflexive(__first, __last);
-
-      std::__inplace_merge(__first, __middle, __last,
-			   __gnu_cxx::__ops::__iter_less_iter());
-    }
+		  _BidirectionalIterator __last) = delete;
 
   /**
-   *  @brief Merges two sorted ranges in place.
-   *  @ingroup sorting_algorithms
-   *  @param  __first   An iterator.
-   *  @param  __middle  Another iterator.
-   *  @param  __last    Another iterator.
-   *  @param  __comp    A functor to use for comparisons.
-   *  @return  Nothing.
-   *
-   *  Merges two sorted and consecutive ranges, [__first,__middle) and
-   *  [middle,last), and puts the result in [__first,__last).  The output will
-   *  be sorted.  The sort is @e stable, that is, for equivalent
-   *  elements in the two ranges, elements from the first range will always
-   *  come before elements from the second.
-   *
-   *  If enough additional memory is available, this takes (__last-__first)-1
-   *  comparisons.  Otherwise an NlogN algorithm is used, where N is
-   *  distance(__first,__last).
-   *
-   *  The comparison function should have the same effects on ordering as
-   *  the function used for the initial sort.
-  */
+   *  Removed as it relies on dynamic memory allocation.
+   */
   template<typename _BidirectionalIterator, typename _Compare>
     inline void
     inplace_merge(_BidirectionalIterator __first,
 		  _BidirectionalIterator __middle,
 		  _BidirectionalIterator __last,
-		  _Compare __comp)
-    {
-      // concept requirements
-      __glibcxx_function_requires(_Mutable_BidirectionalIteratorConcept<
-	    _BidirectionalIterator>)
-      __glibcxx_function_requires(_BinaryPredicateConcept<_Compare,
-	    typename iterator_traits<_BidirectionalIterator>::value_type,
-	    typename iterator_traits<_BidirectionalIterator>::value_type>)
-      __glibcxx_requires_sorted_pred(__first, __middle, __comp);
-      __glibcxx_requires_sorted_pred(__middle, __last, __comp);
-      __glibcxx_requires_irreflexive_pred(__first, __last, __comp);
-
-      std::__inplace_merge(__first, __middle, __last,
-			   __gnu_cxx::__ops::__iter_comp_iter(__comp));
-    }
+		  _Compare __comp) = delete;
 
 
   /// This is a helper function for the __merge_sort_loop routines.
@@ -2718,56 +2512,6 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 				 __step_size, __comp);
 	  __step_size *= 2;
 	}
-    }
-
-  template<typename _RandomAccessIterator, typename _Pointer,
-	   typename _Distance, typename _Compare>
-    void
-    __stable_sort_adaptive(_RandomAccessIterator __first,
-			   _RandomAccessIterator __last,
-			   _Pointer __buffer, _Distance __buffer_size,
-			   _Compare __comp)
-    {
-      const _Distance __len = (__last - __first + 1) / 2;
-      const _RandomAccessIterator __middle = __first + __len;
-      if (__len > __buffer_size)
-	{
-	  std::__stable_sort_adaptive(__first, __middle, __buffer,
-				      __buffer_size, __comp);
-	  std::__stable_sort_adaptive(__middle, __last, __buffer,
-				      __buffer_size, __comp);
-	}
-      else
-	{
-	  std::__merge_sort_with_buffer(__first, __middle, __buffer, __comp);
-	  std::__merge_sort_with_buffer(__middle, __last, __buffer, __comp);
-	}
-
-      std::__merge_adaptive(__first, __middle, __last,
-			    _Distance(__middle - __first),
-			    _Distance(__last - __middle),
-			    __buffer, __buffer_size,
-			    __comp);
-    }
-
-  /// This is a helper function for the stable sorting routines.
-  template<typename _RandomAccessIterator, typename _Compare>
-    void
-    __inplace_stable_sort(_RandomAccessIterator __first,
-			  _RandomAccessIterator __last, _Compare __comp)
-    {
-      if (__last - __first < 15)
-	{
-	  std::__insertion_sort(__first, __last, __comp);
-	  return;
-	}
-      _RandomAccessIterator __middle = __first + (__last - __first) / 2;
-      std::__inplace_stable_sort(__first, __middle, __comp);
-      std::__inplace_stable_sort(__middle, __last, __comp);
-      std::__merge_without_buffer(__first, __middle, __last,
-				  __middle - __first,
-				  __last - __middle,
-				  __comp);
     }
 
   // stable_sort
@@ -4999,99 +4743,21 @@ _GLIBCXX_BEGIN_NAMESPACE_ALGO
 				__gnu_cxx::__ops::__iter_comp_iter(__comp));
     }
 
-  template<typename _RandomAccessIterator, typename _Compare>
-    inline void
-    __stable_sort(_RandomAccessIterator __first, _RandomAccessIterator __last,
-		  _Compare __comp)
-    {
-      typedef typename iterator_traits<_RandomAccessIterator>::value_type
-	_ValueType;
-      typedef typename iterator_traits<_RandomAccessIterator>::difference_type
-	_DistanceType;
-      typedef _Temporary_buffer<_RandomAccessIterator, _ValueType> _TmpBuf;
-
-      if (__first == __last)
-	return;
-
-      // __stable_sort_adaptive sorts the range in two halves,
-      // so the buffer only needs to fit half the range at once.
-      _TmpBuf __buf(__first, (__last - __first + 1) / 2);
-
-      if (__buf.begin() == 0)
-	std::__inplace_stable_sort(__first, __last, __comp);
-      else
-	std::__stable_sort_adaptive(__first, __last, __buf.begin(),
-				    _DistanceType(__buf.size()), __comp);
-    }
-
   /**
-   *  @brief Sort the elements of a sequence, preserving the relative order
-   *         of equivalent elements.
-   *  @ingroup sorting_algorithms
-   *  @param  __first   An iterator.
-   *  @param  __last    Another iterator.
-   *  @return  Nothing.
-   *
-   *  Sorts the elements in the range @p [__first,__last) in ascending order,
-   *  such that for each iterator @p i in the range @p [__first,__last-1),
-   *  @p *(i+1)<*i is false.
-   *
-   *  The relative ordering of equivalent elements is preserved, so any two
-   *  elements @p x and @p y in the range @p [__first,__last) such that
-   *  @p x<y is false and @p y<x is false will have the same relative
-   *  ordering after calling @p stable_sort().
-  */
+   *  Removed as it relies on dynamic memory allocation.
+   */
   template<typename _RandomAccessIterator>
     inline void
-    stable_sort(_RandomAccessIterator __first, _RandomAccessIterator __last)
-    {
-      // concept requirements
-      __glibcxx_function_requires(_Mutable_RandomAccessIteratorConcept<
-	    _RandomAccessIterator>)
-      __glibcxx_function_requires(_LessThanComparableConcept<
-	    typename iterator_traits<_RandomAccessIterator>::value_type>)
-      __glibcxx_requires_valid_range(__first, __last);
-      __glibcxx_requires_irreflexive(__first, __last);
-
-      _GLIBCXX_STD_A::__stable_sort(__first, __last,
-				    __gnu_cxx::__ops::__iter_less_iter());
-    }
+    stable_sort(_RandomAccessIterator __first,
+		_RandomAccessIterator __last) = delete;
 
   /**
-   *  @brief Sort the elements of a sequence using a predicate for comparison,
-   *         preserving the relative order of equivalent elements.
-   *  @ingroup sorting_algorithms
-   *  @param  __first   An iterator.
-   *  @param  __last    Another iterator.
-   *  @param  __comp    A comparison functor.
-   *  @return  Nothing.
-   *
-   *  Sorts the elements in the range @p [__first,__last) in ascending order,
-   *  such that for each iterator @p i in the range @p [__first,__last-1),
-   *  @p __comp(*(i+1),*i) is false.
-   *
-   *  The relative ordering of equivalent elements is preserved, so any two
-   *  elements @p x and @p y in the range @p [__first,__last) such that
-   *  @p __comp(x,y) is false and @p __comp(y,x) is false will have the same
-   *  relative ordering after calling @p stable_sort().
-  */
+   *  Removed as it relies on dynamic memory allocation.
+   */
   template<typename _RandomAccessIterator, typename _Compare>
     inline void
     stable_sort(_RandomAccessIterator __first, _RandomAccessIterator __last,
-		_Compare __comp)
-    {
-      // concept requirements
-      __glibcxx_function_requires(_Mutable_RandomAccessIteratorConcept<
-	    _RandomAccessIterator>)
-      __glibcxx_function_requires(_BinaryPredicateConcept<_Compare,
-	    typename iterator_traits<_RandomAccessIterator>::value_type,
-	    typename iterator_traits<_RandomAccessIterator>::value_type>)
-      __glibcxx_requires_valid_range(__first, __last);
-      __glibcxx_requires_irreflexive_pred(__first, __last, __comp);
-
-      _GLIBCXX_STD_A::__stable_sort(__first, __last,
-				    __gnu_cxx::__ops::__iter_comp_iter(__comp));
-    }
+		_Compare __comp) = delete;
 
   template<typename _InputIterator1, typename _InputIterator2,
 	   typename _OutputIterator,
