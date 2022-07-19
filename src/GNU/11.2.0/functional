@@ -60,7 +60,6 @@
 #include <bits/functional_hash.h>
 #include <bits/invoke.h>
 #include <bits/refwrap.h>	// std::reference_wrapper and _Mem_fn_traits
-#include <bits/std_function.h>	// std::function
 #if __cplusplus > 201402L
 # include <array>
 # include <utility>
