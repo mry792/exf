@@ -12,6 +12,12 @@ void chrono_test () {
     static_assert(2s == 2000ms);
 }
 
+#include <functional>
+void functional_test () {
+    constexpr std::plus<> op{};
+    static_assert(op(-3, 7) == 4);
+}
+
 #include <iterator>
 #if __STDC_HOSTED__
     #include <iostream>
@@ -95,6 +101,7 @@ void variant_test () {
 
 int main () {
     chrono_test();
+    functional_test();
     iterator_test();
     optional_test();
     ranges_test();
