@@ -11,6 +11,7 @@ For embedded environments and others without an OS, a subset of the C++ standard
 | [\<array\>](https://en.cppreference.com/w/cpp/header/array) | Everything except `array::at` functions. |
 | [\<chrono\>](https://en.cppreference.com/w/cpp/header/chrono) | Everything except `*_clock::now` functions. |
 | [\<ctime\>](https://en.cppreference.com/w/cpp/header/ctime) | Supported but relies on `time.h`. |
+| [\<functional\>](https://en.cppreference.com/w/cpp/header/functional) | Everything except `function`, `boyer_moore_searcher`, and `boyer_moore_horspool_searcher`. |
 | [\<iterator\>](https://en.cppreference.com/w/cpp/header/iterator) | Everything except stream and streambuf iterators. |
 | [\<numbers\>](https://en.cppreference.com/w/cpp/header/numbers) | Fully supported. |
 | [\<optional\>](https://en.cppreference.com/w/cpp/header/optional) | Everything except `optional::value` functions. |
