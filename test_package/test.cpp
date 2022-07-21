@@ -12,6 +12,13 @@ void chrono_test () {
     static_assert(2s == 2000ms);
 }
 
+#include <cmath>
+void cmath_test () {
+    constexpr double result = std::lerp(2, 4, 0.5);
+    constexpr double near_zero = result - 3;
+    static_assert(near_zero < 1e-6 and near_zero > -1e-6);
+}
+
 #include <functional>
 void functional_test () {
     constexpr std::plus<> op{};
@@ -101,6 +108,7 @@ void variant_test () {
 
 int main () {
     chrono_test();
+    cmath_test();
     functional_test();
     iterator_test();
     optional_test();
