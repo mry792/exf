@@ -31,7 +31,7 @@
 // Written by Johannes Singler.
 
 #if __STDC_HOSTED__
-#include_next <parallel/compiletime_settings.h>
+# include_next <parallel/compiletime_settings.h>
 #else
 
 /** @brief Determine verbosity level of the parallel mode.
