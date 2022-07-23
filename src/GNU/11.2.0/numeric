@@ -52,6 +52,10 @@
  *  This is a Standard C++ Library header.
  */
 
+#if __STDC_HOSTED__
+# include_next <numeric>
+#endif
+
 #ifndef _GLIBCXX_NUMERIC
 #define _GLIBCXX_NUMERIC 1
 
@@ -62,7 +66,7 @@
 #include <bits/stl_numeric.h>
 
 #ifdef _GLIBCXX_PARALLEL
-# include <parallel/numeric>
+# error "GNU extension \"parallel mode\" is not supported."
 #endif
 
 #if __cplusplus >= 201402L
@@ -719,20 +723,5 @@ namespace __detail
 
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace std
-
-#if __cplusplus >= 201703L
-// Parallel STL algorithms
-# if _PSTL_EXECUTION_POLICIES_DEFINED
-// If <execution> has already been included, pull in implementations
-#  include <pstl/glue_numeric_impl.h>
-# else
-// Otherwise just pull in forward declarations
-#  include <pstl/glue_numeric_defs.h>
-#  define _PSTL_NUMERIC_FORWARD_DECLARED 1
-# endif
-
-// Feature test macro for parallel algorithms
-# define __cpp_lib_parallel_algorithm 201603L
-#endif // C++17
 
 #endif /* _GLIBCXX_NUMERIC */
