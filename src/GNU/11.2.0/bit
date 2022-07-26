@@ -26,6 +26,10 @@
  *  This is a Standard C++ Library header.
  */
 
+#if __STDC_HOSTED__
+# include_next <bit>
+#endif
+
 #ifndef _GLIBCXX_BIT
 #define _GLIBCXX_BIT 1
 
@@ -34,23 +38,7 @@
 #if __cplusplus >= 201402L
 
 #include <type_traits>
-
-#if _GLIBCXX_HOSTED
-# include <ext/numeric_traits.h>
-#else
-# include <limits>
-/// @cond undocumented
-namespace __gnu_cxx
-{
-  template<typename _Tp>
-    struct __int_traits
-    {
-      static constexpr int __digits = std::numeric_limits<_Tp>::digits;
-      static constexpr _Tp __max = std::numeric_limits<_Tp>::max();
-    };
-}
-/// @endcond
-#endif
+#include <ext/numeric_traits.h>
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {
