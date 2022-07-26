@@ -15,6 +15,7 @@ For embedded environments and others without an OS, a subset of the C++ standard
 | [\<functional\>](https://en.cppreference.com/w/cpp/header/functional) | Everything except `function`, `boyer_moore_searcher`, and `boyer_moore_horspool_searcher`. |
 | [\<iterator\>](https://en.cppreference.com/w/cpp/header/iterator) | Everything except stream and streambuf iterators. |
 | [\<numbers\>](https://en.cppreference.com/w/cpp/header/numbers) | Fully supported. |
+| [\<numeric\>](https://en.cppreference.com/w/cpp/header/numeric) | Everything except parallel algorithms. |
 | [\<optional\>](https://en.cppreference.com/w/cpp/header/optional) | Everything except `optional::value` functions. |
 | [\<ranges\>](https://en.cppreference.com/w/cpp/header/ranges) | Everything except `ranges::basic_istream_view` and `views::istream`. |
 | [\<ratio\>](https://en.cppreference.com/w/cpp/header/ratio) | Fully supported. |
