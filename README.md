@@ -8,6 +8,7 @@ For embedded environments and others without an OS, a subset of the C++ standard
 
 | header | What is supported? |
 | --- | --- |
+| [\<algorithm\>](https://en.cppreference.com/w/cpp/header/algorithm) | Everything except `inplace_merge`, `stable_partition`, `stable_sort`, and all parallel algorithms. |
 | [\<array\>](https://en.cppreference.com/w/cpp/header/array) | Everything except `array::at` functions. |
 | [\<chrono\>](https://en.cppreference.com/w/cpp/header/chrono) | Everything except `*_clock::now` functions. |
 | [\<cmath\>](https://en.cppreference.com/w/cpp/header/cmath) | Fully supported. |

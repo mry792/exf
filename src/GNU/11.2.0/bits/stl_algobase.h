@@ -53,6 +53,10 @@
  *  Do not attempt to use it directly. @headername{algorithm}
  */
 
+#if __STDC_HOSTED__
+# include_next <bits/stl_algobase.h>
+#endif
+
 #ifndef _STL_ALGOBASE_H
 #define _STL_ALGOBASE_H 1
 
@@ -2200,11 +2204,8 @@ _GLIBCXX_END_NAMESPACE_ALGO
 _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace std
 
-// NB: This file is included within many other C++ includes, as a way
-// of getting the base algorithms. So, make sure that parallel bits
-// come in too if requested.
 #ifdef _GLIBCXX_PARALLEL
-# include <parallel/algobase.h>
+# error "GNU extension \"parallel mode\" is not supported."
 #endif
 
 #endif
