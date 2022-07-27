@@ -27,6 +27,10 @@
  *  Do not attempt to use it directly. @headername{algorithm}
  */
 
+#if __STDC_HOSTED__
+# include_next <bits/algorithmfwd.h>
+#endif
+
 #ifndef _GLIBCXX_ALGORITHMFWD_H
 #define _GLIBCXX_ALGORITHMFWD_H 1
 
@@ -960,7 +964,7 @@ _GLIBCXX_END_NAMESPACE_VERSION
 } // namespace std
 
 #ifdef _GLIBCXX_PARALLEL
-# include <parallel/algorithmfwd.h>
+# error "GNU extension \"parallel mode\" is not supported."
 #endif
 
 #endif
