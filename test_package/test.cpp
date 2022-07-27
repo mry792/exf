@@ -30,6 +30,11 @@ void cmath_test () {
     static_assert(near_zero < 1e-6 and near_zero > -1e-6);
 }
 
+#include <cstdint>
+void cstdint_test () {
+    static_assert(sizeof(std::uint16_t) == 2);
+}
+
 #include <functional>
 void functional_test () {
     constexpr std::plus<> op{};
@@ -133,6 +138,7 @@ int main () {
     algorithm_test();
     chrono_test();
     cmath_test();
+    cstdint_test();
     functional_test();
     iterator_test();
     numeric_test();
