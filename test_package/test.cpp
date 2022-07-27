@@ -6,6 +6,17 @@ static_assert(std::is_same_v<typename std::array<double, 7>::iterator, double*>)
     static_assert(std::is_same_v<decltype(std::declval<std::array<int, 4>>().at(2)), int&>);
 #endif
 
+#include <algorithm>
+constexpr void algorithm_test () {
+    auto func = [] () constexpr {
+        std::array nums{1.1, 2.2, 3.3, 4.4};
+        std::fill_n(nums.begin(), 2, 5.5);
+        return std::all_of(nums.begin(), nums.end(), [] (double v) { return v > 3.0; });
+    };
+
+    static_assert(func());
+}
+
 #include <chrono>
 void chrono_test () {
     using namespace std::chrono_literals;
@@ -119,6 +130,7 @@ void variant_test () {
 }
 
 int main () {
+    algorithm_test();
     chrono_test();
     cmath_test();
     functional_test();
